@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{progindent}
+\newcommand\token[1]{\mathbf{#1}}
+\newcommand\modop{\mathbin{\%}}
+\newcommand\stringlit[1]{\text{``\texttt{#1}''}}
+\newcommand\meta[1]{\(\langle\mathit{#1}\rangle\)}
+\begin{document}
+  \begin{itemize}
+    \item \texttt{\string\progindent\{\meta{contents}\}}:
+      forms a DSL region.
+    \item \texttt{\string\control\string\br}:
+      inserts a break and an appropriate length of indentation.
+    \item \texttt{\string\control\string\deepen\{\meta{sub}\}}:
+      deepens indentations in \meta{sub}.
+  \end{itemize}
+  \begin{align*}
+    \progindent{%
+      \token{struct}
+        \control\deepen{\control\br
+          \token{type}\ t = \tau \control\br
+          \token{val}\ x = 1 \control\br
+          \token{val}\ f\ n =
+            \control\deepen{\control\br
+              \token{if}\ n \modop 5 = 0\ \token{then}
+                \control\deepen{\control\br
+                  \token{if}\ n \modop 3 = 0\ \token{then}
+                    \ \stringlit{FizzBuzz}\ \token{else}\ \stringlit{Fizz}
+                }\control\br
+              \token{else}
+                \control\deepen{\control\br
+                  \token{if}\ n \modop 3 = 0\ \token{then}
+                    \ \stringlit{Buzz}\ \token{else}\ \mathit{show}\ n
+                }
+            }
+            \control\br
+          \token{module}\ X = \token{struct}
+            \control\deepen{\control\br
+              \token{val}\ y = 2
+            }\control\br
+          \token{end}
+        }\control\br
+      \token{end}
+    }
+  \end{align*}
+\end{document}
