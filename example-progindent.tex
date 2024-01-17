@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{url}
 \usepackage{progindent}
@@ -23,7 +24,7 @@
   \section{Example}
   \begin{align*}
     \progindent{%
-      \token{struct}
+      \token{module}\ \mathit{Main} = \token{struct}
         \control\deepen{\control\br{\ }
           \token{type}\ t = \tau \control\br{;}
           \token{val}\ x = 1 \control\br{;}
@@ -49,13 +50,25 @@
       \token{end}
     }
   \end{align*}
-  Using \texttt{\string\control}s outside \texttt{\string\progindent} makes no effect:
+  Using \texttt{\string\control\string\deepen} outside \texttt{\string\progindent} makes no effect
+  while \texttt{\string\control\string\br} inserts the specified punctuation:
   \begin{align*}
     \token{if}\ n < 0\ \token{then}
       \control\deepen{\control\br{\ }
         \mathord{-}n
       }\control\br{\ }
-    \token{else}\ n
+    \token{else}
+      \control\deepen{\control\br{\ }
+        n
+      }
+  \end{align*}
+  \begin{align*}
+    \token{module}\ \mathit{Main} = \token{struct}
+      \control\deepen{\control\br{\ }
+        \token{type}\ t = \tau \control\br{;\ }
+        \token{val}\ x = 1
+      }\control\br{\ }
+    \token{end}
   \end{align*}
   It would be convenient if you use this DSL in combination with Ott\footnote{%
     \url{https://github.com/ott-lang/ott}
