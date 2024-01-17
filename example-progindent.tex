@@ -1,19 +1,26 @@
 \documentclass{article}
 \usepackage{amsmath}
+\usepackage{url}
 \usepackage{progindent}
 \newcommand\token[1]{\mathbf{#1}}
 \newcommand\modop{\mathbin{\%}}
 \newcommand\stringlit[1]{\text{``\texttt{#1}''}}
 \newcommand\meta[1]{\(\langle\mathit{#1}\rangle\)}
 \begin{document}
+  \section{How to Use}
   \begin{itemize}
     \item \texttt{\string\progindent\{\meta{contents}\}}:
       forms a DSL region.
     \item \texttt{\string\control\string\br}:
-      inserts a break and an appropriate length of indentation.
+      inserts a break and an appropriate length of indentation
+      if used inside \texttt{\string\progindent},
+      or makes no effect otherwise.
     \item \texttt{\string\control\string\deepen\{\meta{sub}\}}:
-      deepens indentations in \meta{sub}.
+      deepens indentations about breaks in \meta{sub}
+      if used inside \texttt{\string\progindent},
+      or makes no effect otherwise.
   \end{itemize}
+  \section{Example}
   \begin{align*}
     \progindent{%
       \token{struct}
@@ -43,4 +50,15 @@
       \token{end}
     }
   \end{align*}
+  Using \texttt{\string\control}s outside \texttt{\string\progindent} makes no effect:
+  \begin{align*}
+    \token{if}\ n < 0\ \token{then}
+      \control\deepen{\control\br
+        -n
+      }\control\br
+    \token{else}\ n
+  \end{align*}
+  It would be comvenient if you use this DSL in combination with Ott\footnote{%
+    \url{https://github.com/ott-lang/ott}
+  }.
 \end{document}

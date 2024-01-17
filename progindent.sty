@@ -1,9 +1,19 @@
-\def\br{\progindent@br@sub}
-\def\deepen{\progindent@deepen@sub}
-\def\finished{\progindent@finished@sub}
+% The setting for indentations:
 \def\progindent@indentation{\quad}
+
+% The escaped alignment tab and break:
 \def\progindent@firstalign{&}
 \def\progindent@breakandalign{\\&}
+
+% The so-called hop trick:
+\def\progindent@then#1\else#2\fi{#1}
+
+% The tokens for the progindent DSL:
+\def\br{\progindent@br@dummy}
+\def\deepen{\progindent@deepen@dummy}
+\def\finished{\progindent@finished@dummy}
+
+% Forms a region for the progindent DSL:
 \newcommand\progindent[1]{%
   \progindent@firstalign
   \progindent@main{}{#1}%
@@ -45,7 +55,7 @@
     \progindent@deepen{#1}#3\progindent@end
   \else
     % Emits an error:
-    \errmessage{Unknown command after control.}%
+    \errmessage{Invalid token after \string\control.}%
   \fi
 }
 \def\progindent@deepen#1#2#3\progindent@end{%
@@ -54,4 +64,26 @@
   % #3 : subsequent contents
   \progindent@main{#1\progindent@indentation}{#2}%
   \progindent@iterA{#1}#3\progindent@end
+}
+% The definiton of the expansion of \control outside the \progindent.
+% Ignores the effect of \br and \deepen:
+\newcommand\control[1]{%
+  % #1 : the token immediately after the \control
+  \ifx\br#1%
+  \else
+    \progindent@control{#1}%
+  \fi
+}
+\def\progindent@control#1{%
+  % #1 : the token immediately after the \control
+  \ifx\deepen#1\progindent@then
+    \progindent@ignoredeepen
+  \else
+    % Emits an error:
+    \errmessage{Invalid token after \string\control.}%
+  \fi
+}
+\def\progindent@ignoredeepen#1{%
+  % #1 : the argument of \deepen
+  #1%
 }
