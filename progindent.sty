@@ -6,7 +6,7 @@
 \def\progindent@breakandalign{\\&}
 
 % The so-called hop trick:
-\def\progindent@then#1\else#2\fi{#1}
+\def\progindent@then#1\else#2\fi{\fi#1}
 
 % The tokens for the progindent DSL:
 \def\br{\progindent@br@dummy}
