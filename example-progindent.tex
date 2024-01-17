@@ -11,10 +11,10 @@
   \begin{itemize}
     \item \texttt{\string\progindent\{\meta{contents}\}}:
       forms a DSL region.
-    \item \texttt{\string\control\string\br}:
+    \item \texttt{\string\control\string\br\{\meta{punct}\}}:
       inserts a break and an appropriate length of indentation
       if used inside \texttt{\string\progindent},
-      or makes no effect otherwise.
+      or inserts \meta{punct} otherwise.
     \item \texttt{\string\control\string\deepen\{\meta{sub}\}}:
       deepens indentations about breaks in \meta{sub}
       if used inside \texttt{\string\progindent},
@@ -24,41 +24,40 @@
   \begin{align*}
     \progindent{%
       \token{struct}
-        \control\deepen{\control\br
-          \token{type}\ t = \tau \control\br
-          \token{val}\ x = 1 \control\br
+        \control\deepen{\control\br{\ }
+          \token{type}\ t = \tau \control\br{;}
+          \token{val}\ x = 1 \control\br{;}
           \token{val}\ f\ n =
-            \control\deepen{\control\br
+            \control\deepen{\control\br{\ }
               \token{if}\ n \modop 5 = 0\ \token{then}
-                \control\deepen{\control\br
+                \control\deepen{\control\br{\ }
                   \token{if}\ n \modop 3 = 0\ \token{then}
                     \ \stringlit{FizzBuzz}\ \token{else}\ \stringlit{Fizz}
-                }\control\br
+                }\control\br{\ }
               \token{else}
-                \control\deepen{\control\br
+                \control\deepen{\control\br{\ }
                   \token{if}\ n \modop 3 = 0\ \token{then}
                     \ \stringlit{Buzz}\ \token{else}\ \mathit{show}\ n
                 }
-            }
-            \control\br
+            }\control\br{;}
           \token{module}\ X = \token{struct}
-            \control\deepen{\control\br
+            \control\deepen{\control\br{\ }
               \token{val}\ y = 2
-            }\control\br
+            }\control\br{\ }
           \token{end}
-        }\control\br
+        }\control\br{\ }
       \token{end}
     }
   \end{align*}
   Using \texttt{\string\control}s outside \texttt{\string\progindent} makes no effect:
   \begin{align*}
     \token{if}\ n < 0\ \token{then}
-      \control\deepen{\control\br
-        -n
-      }\control\br
+      \control\deepen{\control\br{\ }
+        \mathord{-}n
+      }\control\br{\ }
     \token{else}\ n
   \end{align*}
-  It would be comvenient if you use this DSL in combination with Ott\footnote{%
+  It would be convenient if you use this DSL in combination with Ott\footnote{%
     \url{https://github.com/ott-lang/ott}
   }.
 \end{document}
