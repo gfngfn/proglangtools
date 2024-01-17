@@ -2,11 +2,18 @@
 \usepackage[T1]{fontenc}
 \usepackage{bussproofs}
 \usepackage{proginfer}
+\newcommand\meta[1]{\(\langle\mathit{#1}\rangle\)}
 \begin{document}
+  \section{How to use}
+  \begin{itemize}
+    \item \texttt{\string\infer[\meta{label}]\{\meta{hyposethes}\}\{\meta{conclusion}\}}:
+      typesets a derivation tree.
+      \meta{hypotheses} is a \texttt{\string\andalso}-separated list of derivation trees.
+  \end{itemize}
   \section{Example}
   \begin{center}
-    \infer{%
-      \infer{%
+    \infer[Foo]{%
+      \infer[Bar]{%
         A
       \andalso
         \infer{}{%
@@ -21,9 +28,9 @@
       \infer{%
         E
       \andalso
-        \infer{
+        \infer[Baz]{
           \infer{%
-            \infer{}{%
+            \infer[Qux]{}{%
               F
             }
           }{%
