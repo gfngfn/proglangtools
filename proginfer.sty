@@ -1,0 +1,88 @@
+% Requires `bussproofs`
+
+\def\proginfer@unique{\proginfer@unique@dummy}
+\def\proginfer@ifempty#1#2#3{%
+  \ifx\proginfer@unique#1\proginfer@unique#2\else#3\fi
+}
+% Usage:
+% - \derive{〈Hypotheses〉}{〈Conclusion〉}
+% - \derive[〈RuleName〉]{〈Hypotheses〉}{〈Conclusion〉}
+% Typesets an inference rule.
+% The format of arguments is the same as that of `\infrule` of `bcprules.sty`,
+% i.e., hypotheses are separated by `\andalso` or `\\`:
+\newcommand\derive[3][]{%
+  \(\displaystyle
+    \frac{\begin{array}{@{}c@{}}#2\end{array}}{\begin{array}{@{}c@{}}#3\end{array}}
+  \)\proginfer@ifempty{#1}{}{\hbox{\,{\scriptsize\rulename{#1}}}}%
+}
+% A variant version of `\derive` that can be nested.
+% `\\` cannot be used in hypotheses, however:
+\newcommand\infer[3][]{%
+  \proginfer@infer[#1]{#2}{#3}%
+  %\bottomAlignProof %(a vertical alignment option)
+  \DisplayProof
+}
+\newcommand\proginfer@infer[3][]{%
+  \proginfer@inferiter#2\andalso\proginfer@end{1}{#3}{%
+    \proginfer@ifempty{#1}{}{\RightLabel{\scriptsize\rulename{#1}}}%
+  }%
+}
+\def\proginfer@inferiter#1\andalso#2\proginfer@end#3#4#5{%
+  % - #1: one of the formulas for the hypotheses.
+  % - #2: the rest hypotheses.
+  % - #3: an index for hypothesis #1 (one-based).
+  % - #4: a formula for the conclusion.
+  % - #5: a RightLabel spec if necessary, or empty otherwise.
+  \proginfer@buildhypo{#1}%
+  \ifcase#3\relax
+    % #3 == 0 cannot happen.
+  \or
+    \proginfer@ifempty{#2}{%
+      #5\UnaryInfC{\(#4\)}
+    }{%
+      \proginfer@inferiter#2\proginfer@end{2}{#4}{#5}%
+    }%
+  \or
+    \proginfer@ifempty{#2}{
+      #5\BinaryInfC{\(#4\)}%
+    }{%
+      \proginfer@inferiter#2\proginfer@end{3}{#4}{#5}%
+    }%
+  \or
+    \proginfer@ifempty{#2}{%
+      #5\TrinaryInfC{\(#4\)}%
+    }{%
+      \proginfer@inferiter#2\proginfer@end{4}{#4}{#5}%
+    }%
+  \or
+    \proginfer@ifempty{#2}{
+      #5\QuaternaryInfC{\(#4\)}%
+    }{%
+      \proginfer@inferiter#2\proginfer@end{5}{#4}{#5}%
+    }%
+  \or
+    \proginfer@ifempty{#2}{
+      #5\QuinaryInfC{\(#4\)}%
+    }{%
+      \proginfer@inferiter#2\proginfer@end{6}{#4}{#5}%
+    }%
+  \else
+    \errmessage{More than five hypotheses.}%
+  \fi
+}
+% If the first token of `#1` is `\infer`, then this command returns `#1` as it is,
+% or wrap `#1` with `\AxiomC` otherwise.
+\def\proginfer@buildhypo#1{%
+  \proginfer@ifempty{#1}{%
+    \AxiomC{}%
+  }{%
+    \expandafter\ifx\proginfer@firsttoken#1\proginfer@end\infer
+      \proginfer@chopinfer#1%
+    \else
+      \AxiomC{\(#1\)}%
+    \fi
+  }%
+}
+% Replaces the leftmost `\infer` with `\proginfer@infer` with spaces ignored by `#1`:
+\def\proginfer@chopinfer#1\infer{\proginfer@infer}
+\def\proginfer@firsttoken#1#2\proginfer@end{#1}

@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{bussproofs}
+\usepackage{proginfer}
+\begin{document}
+  \section{Example}
+  \begin{center}
+    \infer{%
+      \infer{%
+        A
+      \andalso
+        \infer{}{%
+          B
+        }
+      }{%
+        C
+      }
+    \andalso
+      D
+    \andalso
+      \infer{%
+        E
+      \andalso
+        \infer{
+          \infer{%
+            \infer{}{%
+              F
+            }
+          }{%
+            G
+          }
+        \andalso
+          H
+        }{%
+          I
+        }
+      }{%
+        J
+      }
+    }{%
+      K
+    }
+  \end{center}
+\end{document}
