@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{progbnf}
+\newcommand\token[1]{\mathbf{#1}}
+\newcommand\meta[1]{\(\langle\mathit{#1}\rangle\)}
+\begin{document}
+  \section{How to use}
+  \begin{itemize}
+    \item \texttt{\string\bnf[\meta{set}]\{\meta{metavar}\}\{\meta{constructs}\}}
+  \end{itemize}
+  \section{Example}
+  Single-line BNF:
+  \begin{align*}
+    \bnf{e}{ x | \lambda x.\ e | e\ e }
+  \\
+    \bnf[\mathbf{Expr}]{e}{ x | \lambda x.\ e | e\ e }
+  \end{align*}
+  Multiple-line BNF:
+  \begin{align*}
+    \bnf{e}{%
+         x
+      |  \lambda x : \tau.\ e
+      |  e\ e
+      |* \Lambda \alpha.\ e
+      |  e\ \tau
+      |* \token{pack}\ (\tau, e)\ \token{as}\ \tau
+      |  \token{unpack}\ (\alpha, x) = e\ \token{in}\ e
+    }
+  \end{align*}
+\end{document}

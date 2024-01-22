@@ -1,0 +1,29 @@
+\def\progbnf@unique{\progbnf@unique@dummy}
+\def\progbnf@car#1#2\progbnf@end{#1}
+\def\progbnf@cdr#1#2\progbnf@end{#2}
+\def\progbnf@tab{&}
+\def\progbnf@break{\\}
+\newcommand\bnfeq{\ \mathrel{::=}\ }
+\newcommand\bnfsep{\ \mid\ }
+\newcommand\bnf[3][]{%
+  % #1 : the set defined by the metavariable (if non-empty)
+  % #2 : the metavariable to be defined
+  % #3 : the `|`-separated constructs
+  \ifx\progbnf@unique#1\progbnf@unique\else#1\ni\fi
+  #2\progbnf@tab\bnfeq\progbnf@iter#3|\progbnf@end
+}
+\def\progbnf@iter#1|#2\progbnf@end{%
+  % #1 : the first construct
+  % #2 : the rest of the constructs
+  % If #2 starts with `*`, then a line break is inserted before #2.
+  \ifx\progbnf@unique#2\progbnf@unique
+    #1%
+  \else
+    \expandafter\if\expandafter*\expandafter\string\progbnf@car#2\progbnf@end
+      #1\progbnf@break\progbnf@tab\phantom{\bnfeq}\hspace{-1em}%
+        \bnfsep\expandafter\progbnf@iter\progbnf@cdr#2\progbnf@end\progbnf@end
+    \else
+      #1\bnfsep\progbnf@iter#2\progbnf@end
+    \fi
+  \fi
+}
