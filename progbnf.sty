@@ -1,6 +1,8 @@
 \def\progbnf@unique{\progbnf@unique@dummy}
 \def\progbnf@car#1#2\progbnf@end{#1}
 \def\progbnf@cdr#1#2\progbnf@end{#2}
+\def\local@then#1\else#2\fi{\fi#1}
+\def\local@hop#1\fi{\fi#1}
 \def\progbnf@tab{&}
 \def\progbnf@break{\\}
 \newcommand\bnfeq{\ \mathrel{::=}\ }
@@ -16,14 +18,18 @@
   % #1 : the first construct
   % #2 : the rest of the constructs
   % If #2 starts with `*`, then a line break is inserted before #2.
-  \ifx\progbnf@unique#2\progbnf@unique
-    #1%
-  \else
-    \expandafter\if\expandafter*\expandafter\string\progbnf@car#2\progbnf@end
-      #1\progbnf@break\progbnf@tab\phantom{\bnfeq}\hspace{-1em}%
-        \bnfsep\expandafter\progbnf@iter\progbnf@cdr#2\progbnf@end\progbnf@end
-    \else
-      #1\bnfsep\progbnf@iter#2\progbnf@end
-    \fi
+  {#1}% Encloses #1 so that #1 does not expand the next `\ifx`
+  \ifx\progbnf@unique#2\progbnf@unique\else\local@hop
+    \progbnf@rest{#2}%
+  \fi
+}
+\def\progbnf@rest#1{%
+  % #1 : the rest of the constructs
+  \expandafter\if\expandafter*\progbnf@car#1\progbnf@end
+  \local@then
+    \progbnf@break\progbnf@tab\phantom{\bnfeq}\hspace{-1em}%
+      \bnfsep\expandafter\progbnf@iter\progbnf@cdr#1\progbnf@end\progbnf@end
+  \else\local@hop
+    \bnfsep\progbnf@iter#1\progbnf@end
   \fi
 }
