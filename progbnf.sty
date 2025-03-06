@@ -14,6 +14,13 @@
   \ifx\progbnf@unique#1\progbnf@unique\else#1\ni\fi
   #2\progbnf@tab\bnfeq\progbnf@iter#3|\progbnf@end
 }
+\newcommand\bnfnotab[3][]{%
+  % #1 : the set defined by the metavariable (if non-empty)
+  % #2 : the metavariable to be defined
+  % #3 : the `|`-separated constructs
+  \ifx\progbnf@unique#1\progbnf@unique\else#1\ni\fi
+  #2\bnfeq\progbnf@iter#3|\progbnf@end
+}
 \def\progbnf@iter#1|#2\progbnf@end{%
   % #1 : the first construct
   % #2 : the rest of the constructs
